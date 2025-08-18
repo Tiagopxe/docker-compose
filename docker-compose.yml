@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=admin123
+      - TZ=America/Sao_Paulo
+      - N8N_HOST=${RENDER_EXTERNAL_HOSTNAME}   # Render injeta o domínio público
+      - N8N_PORT=10000                         # Porta interna usada pelo Render
+      - N8N_PROTOCOL=https
+      - N8N_LICENSE_KEY=31535721-e629-4bae-8e0b-fbccd8b939df
+      - WEBHOOK_URL=https://${RENDER_EXTERNAL_HOSTNAME}/
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    driver: bridge
